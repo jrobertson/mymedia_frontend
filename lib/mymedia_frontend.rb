@@ -9,11 +9,11 @@ module MyMediaFrontend
 
   class BrowseView
 
-    def initialize(mediatype='wiki', weblet='', css_url='',
+    def initialize(mediatype='wiki', weblet='', base_url='', css_url='',
                    title=mediatype.capitalize, debug: false)
 
-      @mediatype, @weblet, @css_url, @title = mediatype, weblet, css_url, title
-      @debug = debug
+      @mediatype, @weblet, @base_url = mediatype, weblet, base_url
+      @title, @css_url, @debug = title, css_url, debug
 
     end
 
@@ -42,18 +42,16 @@ module MyMediaFrontend
 
   class CssView
 
-    def initialize(weblet_file)
+    def initialize(weblet)
 
-      @weblet_file = weblet_file
+      @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
 
     end
 
     def browse_css()
 
-      w = Weblet.new(@weblet_file)
-
       lines = []
-      lines << w.render(:browse)
+      lines << @w.render(:browse)
       lines.join("\n")
 
     end
@@ -62,19 +60,20 @@ module MyMediaFrontend
 
   class Main
 
-    def initialize(mediatype='wiki', weblet_file: nil, weblet_cssfile: nil,
-                   css_url: '', debug: false)
+    def initialize(mediatype='wiki', base_url: '', weblet_html: '',
+                   weblet_css: '', css_url: '', debug: false)
 
-      weblet_file ||= File.join(File.dirname(__FILE__), '..',
-                                'data', 'mymedia_frontend.txt')
+      #weblet_file ||= File.join(File.dirname(__FILE__), '..',
+      #                          'data', 'mymedia_frontend.txt')
+      weblet = weblet_html.is_a?(Weblet) ? weblet_html : \
+          Weblet.new(weblet_html)
 
-      weblet = Weblet.new(weblet_file, css_url)
+      @browseview = BrowseView.new(mediatype, weblet, base_url, css_url,
+                                   debug: debug)
 
-      @browseview = BrowseView.new(mediatype, weblet, debug: debug)
-
-      weblet_cssfile ||= File.join(File.dirname(__FILE__), '..',
-                                'data', 'css.txt')
-      @css = CssView.new(weblet_cssfile)
+      #weblet_cssfile ||= File.join(File.dirname(__FILE__), '..',
+      #                          'data', 'css.txt')
+      @css = CssView.new(weblet_css)
 
     end
 
@@ -82,7 +81,7 @@ module MyMediaFrontend
       @browseview.render
     end
 
-    def notice_css()
+    def browse_css()
       @css.browse_css()
     end
 
