@@ -1,3 +1,6 @@
+%topnav
+<nav/>
+
 %nav
 <nav>
   <a href='/do/#{@mediatype}/browse'>browse</a> ::
@@ -15,7 +18,7 @@
   </head>
   <body>
     <div id='wrap'>
-      <!-- nav is added dynamically as a weblet during initialiaze of the calling class -->
+      <:topnav>
       #{nav}
 
       <div id='main'>
@@ -23,32 +26,32 @@
       </div>
       <div id='sideview'>
         <ul>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=a' target='iview'>a</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=b' target='iview'>b</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=c' target='iview'>c</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=d' target='iview'>d</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=e' target='iview'>e</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=f' target='iview'>f</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=g' target='iview'>g</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=h' target='iview'>h</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=i' target='iview'>i</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=j' target='iview'>j</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=k' target='iview'>k</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=l' target='iview'>l</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=m' target='iview'>m</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=n' target='iview'>n</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=o' target='iview'>o</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=p' target='iview'>p</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=q' target='iview'>q</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=r' target='iview'>r</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=s' target='iview'>s</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=t' target='iview'>t</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=u' target='iview'>u</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=v' target='iview'>v</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=w' target='iview'>w</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=x' target='iview'>x</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=y' target='iview'>y</a></li>
-          <li><a href='http://s1.jamesrobertson.me.uk/do/#{@mediatype}/alphabrowse?q=z' target='iview'>z</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=a' target='iview'>a</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=b' target='iview'>b</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=c' target='iview'>c</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=d' target='iview'>d</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=e' target='iview'>e</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=f' target='iview'>f</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=g' target='iview'>g</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=h' target='iview'>h</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=i' target='iview'>i</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=j' target='iview'>j</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=k' target='iview'>k</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=l' target='iview'>l</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=m' target='iview'>m</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=n' target='iview'>n</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=o' target='iview'>o</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=p' target='iview'>p</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=q' target='iview'>q</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=r' target='iview'>r</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=s' target='iview'>s</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=t' target='iview'>t</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=u' target='iview'>u</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=v' target='iview'>v</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=w' target='iview'>w</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=x' target='iview'>x</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=y' target='iview'>y</a></li>
+          <li><a href='#{@base_url}/do/#{@mediatype}/alphabrowse?q=z' target='iview'>z</a></li>
 
         </ul>
         <div style="clear: both"/>
@@ -59,3 +62,10 @@
     </div>
   </body>
 </html>
+
+%alphabrowse
+<li>
+  <a href='/#{@mediatype}/#{edit_file}' target='imain'>#{title}</a>
+  <a href='/do/#{@mediatype}/edit?title=#{title_file}' target='imain'>edit</a>
+  <a href='/do/#{@mediatype}/delete?id=#{id}' target='imain'>del</a>
+</li>
