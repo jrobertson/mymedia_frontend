@@ -33,6 +33,30 @@ module MyMediaFrontend
   # partial see wiki.rsf#alphabrowse
   #
   class AlphaBrowse
+
+    def initialize(mediatype='wiki', weblet, debug: false)
+
+      @mediatype, @debug = mediatype, debug
+
+      @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
+
+    end
+
+    def render(a)
+
+      a.map do |x|
+
+        edit_file = File.basename(x.url).sub(/\.html$/,'.txt')
+        title = x.title
+        title_file = File.basename(x.url).sub(/\.html$/,'')
+        id = x.id
+
+        @w.render('alphabrowse', binding)
+
+      end.join("\n")
+
+    end
+
   end
 
   # partial see wiki.rsf#initialize
@@ -61,20 +85,27 @@ module MyMediaFrontend
   class Main
 
     def initialize(mediatype='wiki', base_url: '', weblet_html: '',
-                   weblet_css: '', css_url: '', debug: false)
+                   weblet_css: '', css_url: '', mymedia: nil, debug: false)
 
-      #weblet_file ||= File.join(File.dirname(__FILE__), '..',
-      #                          'data', 'mymedia_frontend.txt')
+      weblet_file ||= File.join(File.dirname(__FILE__), '..',
+                                'data', 'mymedia_frontend.txt')
       weblet = weblet_html.is_a?(Weblet) ? weblet_html : \
           Weblet.new(weblet_html)
+
+      @alphabrowse = AlphaBrowse.new(mediatype, weblet, debug: debug)
 
       @browseview = BrowseView.new(mediatype, weblet, base_url, css_url,
                                    debug: debug)
 
-      #weblet_cssfile ||= File.join(File.dirname(__FILE__), '..',
-      #                          'data', 'css.txt')
+      weblet_cssfile ||= File.join(File.dirname(__FILE__), '..',
+                                'data', 'css.txt')
       @css = CssView.new(weblet_css)
+      @mymedia = mymedia
 
+    end
+
+    def alphabrowse(q=nil)
+      @alphabrowse.render(@mymedia.browse(q))
     end
 
     def browse()

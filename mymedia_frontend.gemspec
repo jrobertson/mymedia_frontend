@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'mymedia_frontend'
-  s.version = '0.1.1'
+  s.version = '0.1.2'
   s.summary = 'An admin frontend for a MyMedia project (under development).'
   s.authors = ['James Robertson']
   s.files = Dir["lib/mymedia_frontend.rb, 'data/mymedia_frontend.txt','data/css.txt'"]
