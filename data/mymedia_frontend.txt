@@ -8,6 +8,143 @@
   <a href='/do/#{@mediatype}/search' target='imain'>search</a>
 </nav>
 
+%articleview
+<html>
+  <head>
+    <title>View #{@title} Page</title>
+    <style>
+      .new {color: #f00}
+    </style>
+  </head>
+  <body>
+    <a href='/do/#{@mediatype}/edit?file=#{edit_file}'>edit</a>
+    #{article}
+  </body>
+</html>
+
+%edit_article
+<html>
+  <head>
+    <title>Edit #{@title} Page</title>
+    <style>
+      form {background-color: #fff}
+      textarea {background-color: #fff; width: 560px}
+
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+
+<script>
+
+
+function ajaxRequest(url, data, cFunction) {
+  var xhttp;
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      cFunction(this);
+    }
+  };
+  xhttp.open("POST", url);
+  xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhttp.send(data);
+}
+
+
+
+function ajaxCall1() {
+
+  e = document.getElementById('content');
+  console.log('fff' + e.value);
+  var data = 's=' + e.value;
+  ajaxRequest('/do/#{@mediatype}/preview', data, ajaxResponse1);
+}
+
+function ajaxResponse1(xhttp) {
+  document.getElementById('Preview').innerHTML = xhttp.responseText;
+}
+
+  </script>
+  </head>
+  <body>
+    <h1>Edit #{@title} Page</h1>
+
+    <div class='tab'>
+      <button class='tablinks' onclick='openTab(event, "Edit")' id='defaultOpen'>Edit</button>
+      <button class='tablinks' onclick='ajaxCall1(); openTab(event, "Preview")'>Preview</button>
+    </div>
+
+    <div id='Edit' class='tabcontent'>
+      <form action="publish" type="get">
+        <textarea  rows="15" name="content" id="content">#{content}</textarea>
+        <button type="submit">update</button>
+      </form>
+    </div>
+
+    <div id='Preview' class='tabcontent'>
+
+    </div>
+
+
+   <script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+  </body>
+</html>
+
 %browse
 
 <html>
