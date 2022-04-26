@@ -3,32 +3,18 @@
 # file: mymedia_frontend.rb
 
 require 'weblet'
+require 'martile'
 
 
 module MyMediaFrontend
 
-  class BrowseView
+  # classes include:
+  #
+  #  * AlphaBrowse - browse by alphabet letter
+  #  * ArticleView - renders an article page
+  #  * BrowseView  - main view
+  #  * CreateView  - page to create a new article
 
-    def initialize(mediatype='wiki', weblet='', base_url='', css_url='',
-                   title=mediatype.capitalize, debug: false)
-
-      @mediatype, @weblet, @base_url = mediatype, weblet, base_url
-      @title, @css_url, @debug = title, css_url, debug
-
-    end
-
-    def render()
-      nav = @weblet.render 'nav', binding
-      @weblet.render('browse', binding)
-    end
-
-  end
-
-  class CreateView
-  end
-
-  class SearchView
-  end
 
   # partial see wiki.rsf#alphabrowse
   #
@@ -51,7 +37,7 @@ module MyMediaFrontend
         title_file = File.basename(x.url).sub(/\.html$/,'')
         id = x.id
 
-        @w.render('alphabrowse', binding)
+        @w.render('row_links', binding)
 
       end.join("\n")
 
@@ -77,9 +63,39 @@ module MyMediaFrontend
 
   end
 
-  # partial see wiki.rsf#initialize
-  #
-  class Submenu
+  class BrowseView
+
+    def initialize(mediatype='wiki', weblet='', base_url='', css_url='',
+                   title=mediatype.capitalize, debug: false)
+
+      @mediatype, @weblet, @base_url = mediatype, weblet, base_url
+      @title, @css_url, @debug = title, css_url, debug
+
+    end
+
+    def render()
+      nav = @weblet.render 'nav', binding
+      @weblet.render('browse', binding)
+    end
+
+  end
+
+  class CreateView
+
+    def initialize(mediatype='wiki', weblet, title, debug: false)
+
+      @mediatype, @title, @debug = mediatype, title, debug
+
+      @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
+
+    end
+
+    def render()
+
+      @w.render('createview', binding)
+
+    end
+
   end
 
   class CssView
@@ -100,6 +116,30 @@ module MyMediaFrontend
 
   end
 
+  class DeleteView
+
+    def initialize(mediatype='wiki', weblet, title, debug: false)
+
+      @mediatype, @title, @debug = mediatype, title, debug
+
+      @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
+
+    end
+
+    def render_confirm(id)
+
+      @w.render(:delete_confirm, binding)
+
+    end
+
+    def render_deleted(id)
+
+      @w.render(:deleted, binding)
+
+    end
+
+  end
+
   class EditArticle
 
     def initialize(mediatype='wiki', weblet, title, debug: false)
@@ -115,6 +155,82 @@ module MyMediaFrontend
     end
 
   end
+
+  class PublishedView
+
+    def initialize(mediatype='wiki', weblet, title, debug: false)
+
+      @mediatype, @title, @debug = mediatype, title, debug
+
+      @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
+
+    end
+
+    def render()
+
+      @w.render(:published, binding)
+
+    end
+
+  end
+
+  class SearchView
+
+    def initialize(mediatype='wiki', weblet, title, debug: false)
+
+      @mediatype, @title, @debug = mediatype, title, debug
+
+      @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
+
+    end
+
+    def render()
+
+      @w.render(:search_input, binding)
+
+    end
+
+  end
+
+  class SearchResultsView
+
+    def initialize(mediatype='wiki', weblet, title, debug: false)
+
+      @mediatype, @title, @debug = mediatype, title, debug
+
+      @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
+
+    end
+
+    def render(a)
+
+      lines = []
+      lines << @w.render('search_input', binding)
+
+      rows = a.map do |x|
+
+        edit_file = File.basename(x.url).sub(/\.html$/,'.txt')
+        title = x.title
+        title_file = File.basename(x.url).sub(/\.html$/,'')
+        id = x.id
+
+        @w.render('row_links', binding)
+
+      end.join("\n")
+
+      lines << rows
+      lines.join("\n")
+
+    end
+
+  end
+
+
+  # partial see wiki.rsf#initialize
+  #
+  class Submenu
+  end
+
 
   class Main
 
@@ -137,12 +253,22 @@ module MyMediaFrontend
       @browseview = BrowseView.new(mediatype, weblet, base_url, css_url,
                                    debug: debug)
 
+      @createview = CreateView.new(mediatype, weblet, title, debug: debug)
+
       weblet_cssfile ||= File.join(File.dirname(__FILE__), '..',
                                 'data', 'css.txt')
       puts 'before CssView' if @debug
       @css = CssView.new(weblet_css)
+
+      @deleteview = DeleteView.new(mediatype, weblet, title, debug: debug)
+
       puts 'before EditArticle' if @debug
       @edit_article = EditArticle.new(mediatype, weblet, title, debug: debug)
+
+      @publishedview = PublishedView.new(mediatype, weblet, title, debug: debug)
+      @searchview = SearchView.new(mediatype, weblet, title, debug: debug)
+      @searchresultsview = SearchResultsView.new(mediatype, weblet, title,
+                                                 debug: debug)
 
       @mymedia = mymedia
 
@@ -170,8 +296,40 @@ module MyMediaFrontend
       @css.browse_css()
     end
 
+    def create_view()
+      @createview.render
+    end
+
+    def delete(id, confirmed: false)
+
+      if confirmed then
+        @mymedia.delete id
+        @deleteview.method(:render_deleted).call(id)
+      else
+        @deleteview.method(:render_confirm).call(id)
+      end
+
+    end
+
     def edit_article(filename)
       @edit_article.render(@mymedia.read(filename))
+    end
+
+    def publish(content)
+      r = @mymedia.writecopy_publish content
+      @publishedview.render()
+    end
+
+    def preview(s)
+      Martile.new(s, debug: false).to_html
+    end
+
+    def search_view()
+      @searchview.render()
+    end
+
+    def searchresults_view(keyword)
+      @searchresultsview.render(@mymedia.search(keyword))
     end
 
   end
