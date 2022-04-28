@@ -32,9 +32,13 @@ module MyMediaFrontend
 
       a.map do |x|
 
-        edit_file = File.basename(x.url).sub(/\.html$/,'.txt')
+        if @mediatype == 'wiki' then
+          title_file = File.basename(x.url).sub(/\.html$/,'')
+        else
+          title_file = x.url[/[^\/]+\/[^\/]+\/[^\/]+\/[^\/]+$/]
+        end
+
         title = x.title
-        title_file = File.basename(x.url).sub(/\.html$/,'')
         id = x.id
 
         @w.render('row_links', binding)
@@ -76,6 +80,55 @@ module MyMediaFrontend
     def render()
       nav = @weblet.render 'nav', binding
       @weblet.render('browse', binding)
+    end
+
+  end
+
+  class BrowseAllView
+
+    def initialize(mediatype='wiki', weblet='', title, debug: false)
+
+      @mediatype, @title, @weblet = mediatype, title, weblet
+      @debug = debug
+
+    end
+
+    def render(a, pg: '1')
+
+      a2 = a.each_slice(15).to_a
+
+
+      lines = []
+      lines << @weblet.render(:browseall, binding)
+      lines << a2[pg.to_i-1].map do |x|
+
+
+        if @mediatype == 'wiki' then
+          title_file = File.basename(x.url).sub(/\.html$/,'')
+        else
+          title_file = x.url[/[^\/]+\/[^\/]+\/[^\/]+\/[^\/]+$/]
+        end
+
+        title = x.title
+        id = x.id
+
+        @weblet.render('row_links', binding)
+
+      end.join("\n")
+
+      if a2.length > 1 then
+
+        lines << '<nav id="pages">'
+
+        lines << (1..a2.length).map do |n|
+          "<a href='browseall?pg=%d'>%d</a>" % [n,n]
+        end.join('&nbsp;')
+
+        lines << '</nav>'
+      end
+
+      lines.join("\n")
+
     end
 
   end
@@ -209,9 +262,13 @@ module MyMediaFrontend
 
       rows = a.map do |x|
 
-        edit_file = File.basename(x.url).sub(/\.html$/,'.txt')
+        if @mediatype == 'wiki' then
+          title_file = File.basename(x.url).sub(/\.html$/,'')
+        else
+          title_file = x.url[/[^\/]+\/[^\/]+\/[^\/]+\/[^\/]+$/]
+        end
+
         title = x.title
-        title_file = File.basename(x.url).sub(/\.html$/,'')
         id = x.id
 
         @w.render('row_links', binding)
@@ -252,6 +309,8 @@ module MyMediaFrontend
       puts 'before BrowseView' if @debug
       @browseview = BrowseView.new(mediatype, weblet, base_url, css_url,
                                    debug: debug)
+      @browseallview = BrowseAllView.new(mediatype, weblet, title,
+                                         debug: debug)
 
       @createview = CreateView.new(mediatype, weblet, title, debug: debug)
 
@@ -280,8 +339,16 @@ module MyMediaFrontend
 
     def article_view(htmlfile)
 
-      edit_file = htmlfile.sub(/\.html$/,'.txt')
+
       doc = Rexle.new(@mymedia.view(htmlfile))
+
+      edit_file = if @mediatype == 'wiki' then
+        htmlfile.sub(/\.html$/,'.txt')
+      else
+        link = doc.root.element('body/div/div/ul/li/a')
+        File.basename(link.attributes[:href])
+      end
+
       html = doc.root.element('body/div/article').xml
 
       @articleview.render(edit_file, html)
@@ -290,6 +357,10 @@ module MyMediaFrontend
 
     def browse()
       @browseview.render
+    end
+
+    def browse_all(pg: '1')
+      @browseallview.render(@mymedia.browse, pg: pg)
     end
 
     def browse_css()
