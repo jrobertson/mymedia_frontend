@@ -22,6 +22,20 @@
   </body>
 </html>
 
+%createview
+<html>
+  <head><title>Create #{@title} Page</title></head>
+  <body>
+    <h1>Create #{@title} Page</h1>
+
+    <form action="publish" type="get">
+      <textarea autofocus="true" cols="60" name="content" rows="15">untitled
+tag1 tag2</textarea>
+      <button type="submit">create</button>
+    </form>
+  </body>
+</html>
+
 %edit_article
 <html>
   <head>
@@ -200,9 +214,41 @@ document.getElementById("defaultOpen").click();
   </body>
 </html>
 
-%alphabrowse
+%row_links
 <li>
   <a href='/#{@mediatype}/#{edit_file}' target='imain'>#{title}</a>
   <a href='/do/#{@mediatype}/edit?title=#{title_file}' target='imain'>edit</a>
   <a href='/do/#{@mediatype}/delete?id=#{id}' target='imain'>del</a>
 </li>
+
+%search_input
+<h1>Search #{@title} Pages</h1>
+<form action="search" type="get">
+  <input autofocus="true" name="keyword" type="text" />
+  <button type="submit">search</button>
+</form>
+
+%delete_confirm
+<form action='delete' method='post'>
+  <p>Are you sure you want to delete?</p>
+  <input type='hidden' name='confirm' value='yes'/>
+  <input type='hidden' name='id' value='#{id}'/>
+  <input type='submit' value='confirm'/>
+  <a href='/do/#{@mediatype}/browse' target='_top'>cancel</a>
+</form>
+
+%deleted
+<p>deleted #{id}</p>
+
+%published
+<html>
+  <head>
+    <title>#{@title} Page Published</title>
+  </head>
+  <body>
+    <p><strong>#{@title} Page published!</strong></p>
+  </body>
+</html>
+
+%browseall
+<h1>Browse #{@title} pages</h1>
