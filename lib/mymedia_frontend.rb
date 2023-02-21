@@ -107,6 +107,7 @@ module MyMediaFrontend
           title_file = File.basename(x.url).sub(/\.html$/,'')
         else
           title_file = x.url[/[^\/]+\/[^\/]+\/[^\/]+\/[^\/]+$/]
+          title_file = x.url[/[^\/]+$+/] if title_file.nil?
         end
 
         title = x.title
@@ -329,7 +330,7 @@ module MyMediaFrontend
       @searchresultsview = SearchResultsView.new(mediatype, weblet, title,
                                                  debug: debug)
 
-      @mymedia = mymedia
+      @mediatype,@mymedia = mediatype, mymedia
 
     end
 
@@ -337,18 +338,24 @@ module MyMediaFrontend
       @alphabrowse.render(@mymedia.browse(q))
     end
 
-    def article_view(htmlfile)
+    def article_view(file, id=nil)
 
 
-      doc = Rexle.new(@mymedia.view(htmlfile))
+      doc = Rexle.new(@mymedia.view(file))
 
       edit_file = if @mediatype == 'wiki' then
-        htmlfile.sub(/\.html$/,'.txt')
+        file.sub(/\.html$/,'') + '.txt'
       else
-        link = doc.root.element('body/div/div/ul/li/a')
-        File.basename(link.attributes[:href])
+        if File.extname(file) == '.html' then
+          link = doc.root.element('body/div/div/ul/li/a')
+          File.basename(link.attributes[:href])
+        else
+          #@mymedia.find_sourcefile id
+          'foo.txt'
+        end
       end
 
+      #return doc
       html = doc.root.element('body/div/article').xml
 
       @articleview.render(edit_file, html)

@@ -1,10 +1,11 @@
 Gem::Specification.new do |s|
   s.name = 'mymedia_frontend'
-  s.version = '0.3.0'
+  s.version = '0.4.0'
   s.summary = 'An admin frontend for a MyMedia project (under development).'
   s.authors = ['James Robertson']
   s.files = Dir["lib/mymedia_frontend.rb, 'data/mymedia_frontend.txt','data/css.txt'"]
-  s.add_runtime_dependency('weblet', '~> 0.4', '>=0.4.0')
+  s.add_runtime_dependency('weblet', '~> 0.4', '>=0.4.1')
+  s.add_runtime_dependency('martile', '~> 1.6', '>=1.6.2')
   s.signing_key = '../privatekeys/mymedia_frontend.pem'
   s.cert_chain  = ['gem-public_cert.pem']
   s.license = 'MIT'
