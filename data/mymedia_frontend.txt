@@ -3,23 +3,24 @@
 
 %nav
 <nav>
-  <a href='/do/#{@mediatype}/browse'>browse</a> ::
-  <a href='/do/#{@mediatype}/create' target='imain'>create</a> ::
+  <a href='/do/#{@mediatype}/browse'>browse</a> :: 
+  <a href='/do/#{@mediatype}/create' target='imain'>create</a> :: 
   <a href='/do/#{@mediatype}/search' target='imain'>search</a>
 </nav>
 
 %articleview
-<html>
-  <head>
-    <title>View #{@title} Page</title>
-    <style>
-      .new {color: #f00}
-    </style>
-  </head>
-  <body>
-    <a href='/do/#{@mediatype}/edit?file=#{edit_file}'>edit</a>
+<html>                                       
+  <head>                                     
+    <title>View #{@title} Page</title>            
+    <style>                                  
+      .new {color: #f00}                     
+    </style>                                 
+  </head>                                    
+  <body>                                     
+    <a href='/do/#{@mediatype}/edit?file=#{edit_file}'>edit</a> |
+    <a href='/do/#{@mediatype}/redirect?file=#{file}'>permalink</a>
     #{article}
-  </body>
+  </body>                                    
 </html>
 
 %createview
@@ -36,7 +37,7 @@ tag1 tag2</textarea>
   </body>
 </html>
 
-%edit_article
+%edit_article  
 <html>
   <head>
     <title>Edit #{@title} Page</title>
@@ -216,8 +217,7 @@ document.getElementById("defaultOpen").click();
 
 %row_links
 <li>
-  <a href='/#{@mediatype}/#{edit_file}' target='imain'>#{title}</a>
-  <a href='/do/#{@mediatype}/edit?title=#{title_file}' target='imain'>edit</a>
+  <a href='/do/#{@mediatype}/view?id=#{id}&uri=#{title_file}' target='imain'>#{title}</a>
   <a href='/do/#{@mediatype}/delete?id=#{id}' target='imain'>del</a>
 </li>
 
