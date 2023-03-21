@@ -5,7 +5,6 @@
 require 'weblet'
 require 'martile'
 
-
 module MyMediaFrontend
 
   # classes include:
@@ -58,8 +57,16 @@ module MyMediaFrontend
       @w = weblet.is_a?(Weblet) ? weblet : Weblet.new(weblet)
 
     end
-
-    def render(edit_file, article)
+    
+    # Render the HTML for viewing an article
+    #
+    # parameters explained:
+    #
+    # edit_file: the name of the text file to be edited
+    # article: article contents in HTML format
+    # file: contains the relative path to the HTML file
+    #
+    def render(edit_file, article, file)
 
       @w.render('articleview', binding)
 
@@ -358,7 +365,7 @@ module MyMediaFrontend
       #return doc
       html = doc.root.element('body/div/article').xml
 
-      @articleview.render(edit_file, html)
+      @articleview.render(edit_file, html, file)
 
     end
 
